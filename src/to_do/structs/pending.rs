@@ -1,3 +1,6 @@
+use crate::to_do::traits::create::Create;
+use crate::to_do::traits::delete::Delete;
+
 use super::base::Base;
 use super::super::enums::TaskStatus;
 use super::super::traits::get::Get;
@@ -23,4 +26,10 @@ impl Get for Pending {
 }
 
 impl Edit for Pending {
+}
+
+impl Delete for Pending {}
+
+impl Create for Pending {
+    
 }

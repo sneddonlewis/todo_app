@@ -5,7 +5,7 @@ use crate::state::write_to_file;
 
 pub trait Create {
     fn create(&self, title: &str, status: &str, state: &mut Map<String, Value>) {
-        state.insert(title, json!(status));
-        write_to_file("state.json");
+        state.insert(title.to_string(), json!(status));
+        write_to_file("state.json", state);
     }
 }

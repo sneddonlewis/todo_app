@@ -1,15 +1,29 @@
 mod state;
+mod to_do;
+mod processes;
+
 use std::env;
-use state::{write_to_file, read_file};
+use state::read_file;
 use serde_json::value::Value;
-use serde_json::{Map, json};
+use serde_json::Map;
+use to_do::to_do_factory;
+use to_do::enums::TaskStatus;
+use processes::process_input;
 
 fn main() {
     let args = env::args().collect::<Vec<String>>();
-    let status = &args[1];
+    let command = &args[1];
     let title = &args[2];
     // let mut state = Map::new(); first time so there's valid json
-    let mut state: Map<String, Value> = read_file("state.json");
-    state.insert(title.to_string(), json!(status));
-    write_to_file("state.json", &mut state);
+    let state: Map<String, Value> = read_file("state.json");
+
+    let status: String;
+    match &state.get(*&title) {
+        Some(result) => status = result.to_string().replace('\"', ""),
+        None => status = "pending".to_owned(),
+    }
+
+    let item = to_do_factory(title, TaskStatus::from_string(status.to_uppercase()));
+
+    process_input(item, command.to_string(), &state);
 }
