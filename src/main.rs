@@ -1,3 +1,5 @@
+use actix_web::{App, HttpServer};
+mod views;
 mod state;
 mod to_do;
 mod processes;
@@ -10,7 +12,18 @@ use to_do::to_do_factory;
 use to_do::enums::TaskStatus;
 use processes::process_input;
 
-fn main() {
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .configure(views::views_factory)
+    })
+        .bind("127.0.0.1:8080")?
+        .run()
+        .await
+}
+
+fn _main() {
     let args = env::args().collect::<Vec<String>>();
     let command = &args[1];
     let title = &args[2];
