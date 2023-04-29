@@ -21,22 +21,10 @@ impl Done {
 }
 
 impl Get for Done {
-    fn get(&self, title: &str) {
-        println!("Getting done {}", title);
-    }
 }
 
 impl Edit for Done {
-    fn set_to_done(&self, title: &str) {
-        println!("Wat!, {} is  done already", title);
-    }
-    fn set_to_pending(&self, title: &str) {
-        println!("Set {} from done to pending", title);
-    }
 }
 
 impl Delete for Done {
-    fn delete(&self, title: &str) {
-        println!("deleting {}", title);
-    }
 }
