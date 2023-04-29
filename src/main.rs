@@ -1,22 +1,15 @@
-mod to_do;
-
-use to_do::to_do_factory;
-use to_do::ItemTypes;
-use to_do::enums::TaskStatus;
-use to_do::traits::get::Get;
-use to_do::traits::edit::Edit;
-use to_do::traits::delete::Delete;
+mod state;
+use std::env;
+use state::{write_to_file, read_file};
+use serde_json::value::Value;
+use serde_json::{Map, json};
 
 fn main() {
-    let washing = to_do_factory("washing", TaskStatus::DONE);
-    match washing {
-        ItemTypes::Done(item) => {
-            item.get(&item.to_do.title);
-            item.delete(&item.to_do.title);
-        },
-        ItemTypes::Pending(item) => {
-            item.get(&item.to_do.title);
-            item.set_to_done(&item.to_do.title);
-        },
-    }
+    let args = env::args().collect::<Vec<String>>();
+    let status = &args[1];
+    let title = &args[2];
+    // let mut state = Map::new(); first time so there's valid json
+    let mut state: Map<String, Value> = read_file("state.json");
+    state.insert(title.to_string(), json!(status));
+    write_to_file("state.json", &mut state);
 }

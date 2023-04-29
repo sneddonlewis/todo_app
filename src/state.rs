@@ -9,11 +9,12 @@ pub fn read_file(file_name: &str) -> Map<String, Value> {
     let mut file = File::open(file_name.to_string()).expect("could not open file");
     let mut data = String::new();
     file.read_to_string(&mut data).expect("could not read from file");
-    let json_data = serde_json::from_str(&data).expect("could not deserialize from json");
-    json_data
-        .as_object::<Map<String, Value>>()
+    let json_data: Value = serde_json::from_str(&data).expect("could not deserialize from json");
+    let state: Map<String, Value> = json_data
+        .as_object()
         .expect("could not map json to hash table")
-        .clone()
+        .clone();
+    state
 }
 
 pub fn write_to_file(file_name: &str, state: &mut Map<String, Value>) {
