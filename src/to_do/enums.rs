@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter, Result};
 use serde::ser::{Serialize, Serializer};
 
+#[derive(Clone)]
 pub enum TaskStatus {
     DONE,
     PENDING,

@@ -1,5 +1,12 @@
+use actix_web::http::header::ContentType;
+use actix_web::{Responder, HttpRequest, HttpResponse};
+use actix_web::body::BoxBody;
 use serde::Serialize;
-use crate::to_do::ItemTypes;
+use serde_json::{Map, value::Value};
+
+use crate::state::read_file;
+use crate::to_do::{ItemTypes, to_do_factory};
+use crate::to_do::enums::TaskStatus;
 use crate::to_do::structs::base::Base;
 
 #[derive(Serialize)]
@@ -30,4 +37,27 @@ impl ToDoItems {
             done_item_count,
         }
     }   
+
+    pub fn get_state() -> ToDoItems {
+        let state: Map<String, Value> = read_file("state.json");
+        let mut buffer = Vec::new();
+
+        for (key, value) in state {
+            let status = TaskStatus::from_string(&value.as_str().unwrap().to_string());
+            let item = to_do_factory(&key, status);
+            buffer.push(item);
+        }
+        ToDoItems::new(buffer)
+    }
 } 
+
+impl Responder for ToDoItems {
+    type Body = BoxBody;
+
+    fn respond_to(self, _: &HttpRequest) -> HttpResponse<Self::Body> {
+        let body = serde_json::to_string(&self).unwrap();    
+        HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .body(body)
+    }
+}
