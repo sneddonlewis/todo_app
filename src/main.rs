@@ -5,6 +5,7 @@ mod state;
 mod to_do;
 mod processes;
 mod json_serialization;
+mod jwt;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

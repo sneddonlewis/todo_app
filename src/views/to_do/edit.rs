@@ -1,9 +1,11 @@
 use actix_web::{HttpResponse, web::Json};
 use serde_json::{Map, Value};
 
-use crate::{json_serialization::{to_do_item::ToDoItem, to_do_items::ToDoItems}, state::read_file, to_do::{enums::TaskStatus, to_do_factory}, processes::process_input};
+use crate::{json_serialization::{to_do_item::ToDoItem, to_do_items::ToDoItems}, state::read_file, to_do::{enums::TaskStatus, to_do_factory}, processes::process_input, jwt::JwToken};
 
-pub async fn edit(to_do_item: Json<ToDoItem>) -> HttpResponse {
+pub async fn edit(to_do_item: Json<ToDoItem>, token: JwToken) -> HttpResponse {
+    println!("JWT message: {}", token.message);
+
     let state: Map<String, Value> = read_file("state.json");
     let status: TaskStatus;
 
