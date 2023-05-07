@@ -4,6 +4,7 @@ use actix_service::Service;
 use actix_web::{App, HttpServer};
 use actix_cors::Cors;
 
+mod config;
 mod models;
 mod schema;
 mod database;
